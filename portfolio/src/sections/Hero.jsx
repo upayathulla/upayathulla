@@ -13,13 +13,13 @@ import { GlitchMode } from "postprocessing";
 const SpiderModel = React.memo(({ isAttacking, onAnimationEnd }) => {
    const group = useRef();
    const webMeshes = useRef([]);
-   const { scene, animations } = useGLTF("/models/spider_walk_and_attack.glb");
+   const { scene, animations } = useGLTF(`${import.meta.env.BASE_URL}models/spider_walk_and_attack.glb`);
    const { actions } = useAnimations(animations, group);
 
    // Load original textures
    const [textureD, textureR] = useTexture([
-      "/textures/texture_d.png",
-      "/textures/texture_r.png"
+      `${import.meta.env.BASE_URL}textures/texture_d.png`,
+      `${import.meta.env.BASE_URL}textures/texture_r.png`
    ]);
 
    // Configure materials only once

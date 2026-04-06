@@ -1,9 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { developerDetails } from "../data/portfolio-data";
-import { Send, Mail, Phone, MapPin, Globe, Github, Linkedin, ExternalLink, TriangleAlert } from "lucide-react";
+import { Send, Mail, Phone, MapPin, Globe, Github, Linkedin, ExternalLink, TriangleAlert, CheckCircle2 } from "lucide-react";
 
 export default function Contact() {
+   const [formData, setFormData] = useState({
+      name: "",
+      email: "",
+      message: ""
+   });
+   const [status, setStatus] = useState({ type: "", message: "" });
+   const [isSubmitting, setIsSubmitting] = useState(false);
+
+   const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData(prev => ({ ...prev, [name]: value }));
+   };
+
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+      setIsSubmitting(true);
+      setStatus({ type: "", message: "" });
+
+      try {
+         const response = await fetch("http://localhost:5000/api/contact", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData)
+         });
+
+         const data = await response.json();
+
+         if (response.ok) {
+            setStatus({ type: "success", message: "SIGNAL_TRANSMITTED: MESSAGE_RECEIVED_BY_CORE" });
+            setFormData({ name: "", email: "", message: "" });
+         } else {
+            setStatus({ type: "error", message: `SIGNAL_FAILED: ${data.error || "UNKNOWN_ERROR"}` });
+         }
+      } catch (error) {
+         setStatus({ type: "error", message: "SIGNAL_INTERRUPTED: CHECK_BACKEND_STATUS" });
+      } finally {
+         setIsSubmitting(false);
+      }
+   };
+
    return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
@@ -21,11 +61,15 @@ export default function Contact() {
                   <h3 className="font-tech text-3xl font-black text-white uppercase tracking-tighter">Transmit_Signal</h3>
                </div>
 
-               <form className="flex flex-col gap-6">
+               <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
                    <label className="text-xs text-text-gray/90 font-bold uppercase tracking-widest pl-2">Subject_Sender</label>
                    <input 
                      type="text" 
+                     name="name"
+                     value={formData.name}
+                     onChange={handleChange}
+                     required
                      placeholder="ENTER_NAME_IDENTIFIER" 
                      className="tech-frame w-full bg-white/5 border-white/20 text-white text-xs font-mono p-4 outline-none focus:border-primary-red transition-all uppercase placeholder:text-white/40"
                    />
@@ -35,6 +79,10 @@ export default function Contact() {
                    <label className="text-xs text-text-gray/90 font-bold uppercase tracking-widest pl-2">Frequency_Coordinate</label>
                    <input 
                      type="email" 
+                     name="email"
+                     value={formData.email}
+                     onChange={handleChange}
+                     required
                      placeholder="ENTER_EMAIL_PROTOCOL" 
                      className="tech-frame w-full bg-white/5 border-white/20 text-white text-xs font-mono p-4 outline-none focus:border-primary-red transition-all uppercase placeholder:text-white/40"
                    />
@@ -44,15 +92,29 @@ export default function Contact() {
                    <label className="text-xs text-text-gray/90 font-bold uppercase tracking-widest pl-2">Payload_Data</label>
                    <textarea 
                      rows="6" 
+                     name="message"
+                     value={formData.message}
+                     onChange={handleChange}
+                     required
                      placeholder="ENTER_MESSAGE_ENCRYPTED" 
                      className="tech-frame w-full bg-white/5 border-white/20 text-white text-xs font-mono p-4 outline-none focus:border-primary-red transition-all uppercase placeholder:text-white/40 resize-none"
                    ></textarea>
                 </div>
 
-                  <button className="relative group overflow-hidden tech-frame bg-primary-red border-none text-white font-black text-[10px] uppercase tracking-[0.4em] py-4 h-14 flex items-center justify-center gap-4 hover:bg-white hover:text-black transition-all duration-500">
-                     <Send size={16} />
-                     Transmit_Message
-                     {/* Glitch effect on button hover */}
+                  {status.message && (
+                     <div className={`p-4 text-[10px] font-mono font-bold uppercase tracking-widest flex items-center gap-3 ${status.type === 'success' ? 'bg-primary-red/10 text-primary-red border border-primary-red/30' : 'bg-red-500/10 text-red-500 border border-red-500/30'}`}>
+                        {status.type === 'success' ? <CheckCircle2 size={14} /> : <TriangleAlert size={14} />}
+                        {status.message}
+                     </div>
+                  )}
+
+                  <button 
+                     type="submit"
+                     disabled={isSubmitting}
+                     className={`relative group overflow-hidden tech-frame bg-primary-red border-none text-white font-black text-[10px] uppercase tracking-[0.4em] py-4 h-14 flex items-center justify-center gap-4 hover:bg-white hover:text-black transition-all duration-500 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                     <Send size={16} className={isSubmitting ? 'animate-pulse' : ''} />
+                     {isSubmitting ? 'TRANSMITTING...' : 'Transmit_Message'}
                      <div className="absolute inset-x-full inset-y-0 bg-white/30 group-hover:-inset-x-0 transition-all duration-300" />
                   </button>
                </form>

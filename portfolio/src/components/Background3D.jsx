@@ -57,10 +57,10 @@ const Background3D = () => {
 
   return (
     <div className="fixed inset-0 z-[-1] pointer-events-none bg-black">
-      <Canvas 
+      <Canvas
         camera={{ position: [0, 0, 1] }}
         gl={glSettings}
-        dpr={1} 
+        dpr={1}
       >
         <StarBackground />
       </Canvas>

@@ -2,9 +2,12 @@
   "name": "portfolio",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://upayathulla.github.io/upayathulla/",
   "type": "module",
   "scripts": {
     "dev": "node fun.js && vite",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",

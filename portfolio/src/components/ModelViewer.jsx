@@ -98,5 +98,5 @@ export default function ModelViewer({ modelPath, fallbackIcon, scale = 1, camera
 
 // Global pre-load
 if (typeof window !== "undefined") {
-  useGLTF.preload("/models/cyberpunk_laptop.glb");
+   useGLTF.preload(`${import.meta.env.BASE_URL}models/cyberpunk_laptop.glb`);
 }

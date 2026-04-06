@@ -40,8 +40,8 @@ export default function GamingHUD({ level, xp }) {
       <>
          {/* 1. HEALTH / ENERGY / XP BAR (Top Right) */}
          <div className="fixed top-8 right-8 z-2000 flex flex-col items-end gap-3">
-            <div className="flex items-center gap-4">
-               <div className="flex flex-col items-end">
+            <div className="flex items-center gap-4 mx-15 mt-10">
+               <div className="flex flex-col items-end ">
                   <span className="text-[8px] text-primary-red/70 font-black uppercase tracking-[0.3em]">Synapse_Core // MU</span>
                   <div className="flex items-center gap-2">
                      <span className="text-white font-tech text-2xl italic font-black">L0{level}</span>

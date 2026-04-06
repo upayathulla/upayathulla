@@ -1,0 +1,14 @@
+# Root .gitignore
+node_modules/
+.env
+dist/
+.DS_Store
+
+# Backend specific
+backend/node_modules/
+backend/.env
+
+# Frontend specific
+portfolio/node_modules/
+portfolio/dist/
+portfolio/.env.local
